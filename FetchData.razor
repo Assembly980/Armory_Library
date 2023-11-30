@@ -1,0 +1,55 @@
+﻿@page "/fetchdata"
+@using Weapon_Armory.Data
+@inject WeatherForecastService ForecastService
+
+<PageTitle>Display All Items</PageTitle>
+
+<h1>Display All Items</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Rarity</th>
+                <th>Name</th>
+                <th>Extra Info</th>
+                <th>Picture</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int forecast = 1; forecast <= forecasts.Count(); forecast++)
+            {
+                <tr>
+                    <td>@forecast</td>
+                    <td>@forecasts[forecast - 1].WeaponRarity</td>
+                    <td>@forecasts[forecast - 1].WeaponName</td>
+                    <td>@forecasts[forecast - 1].Description</td>
+                    <td><img src="@forecasts[forecast - 1].Picture" alt="Weapon Image" /></td> 
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<WeatherForecast>? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = new HttpClient();
+
+        forecasts = new List<WeatherForecast>();
+        HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:5000/api/swords");
+        string json = await response.Content.ReadAsStringAsync();
+        forecasts = Newtonsoft.Json.JsonConvert.DeserializeObject<List<WeatherForecast>>(json);
+        var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+    }
+}

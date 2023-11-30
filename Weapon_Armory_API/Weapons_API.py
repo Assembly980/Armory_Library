@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sqlite3
 from contextlib import closing
+import random
 
 app = Flask(__name__)
 CORS(app)
@@ -36,6 +37,17 @@ def GetSwordFromDB(WeaponName):
 
     return RequestedSword
 
+def GetRandomSwordFromDB():
+
+    randomNum = random.randint(1, 28)
+    
+    conn = DBConnection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT WeaponRarity, WeaponName, Description, Picture FROM Weapon Where ID = ?', (randomNum,))
+    RandomSword = cursor.fetchone()
+
+    return RandomSword
+
 #returns all swords in database
 @app.route('/api/swords', methods=['GET'])
 def GetAllSwords():
@@ -48,9 +60,15 @@ def GetRequestedSword(WeaponName):
     sword = GetSwordFromDB(WeaponName)
 
     if sword:
-        return jsonify({'WeaponName': sword[0], 'WeaponRarity': sword[1], 'Description':sword[2], 'Picture': sword[3]})
+        return jsonify({'WeaponRarity': sword[0], 'WeaponName': sword[1], 'Description':sword[2], 'Picture': sword[3]})
     else:
         return jsonify(message='Sword not found! Its dangerous to go alone, take this wooden sword!'), 404
+
+#returns a random weapon
+@app.route('/api/swords/random', methods=['GET'])
+def GetRandomSword():
+    sword = GetRandomSwordFromDB()
+    return jsonify({'WeaponRarity': sword[0], 'WeaponName': sword[1], 'Description':sword[2], 'Picture': sword[3]})
 
 if __name__ == '__main__':
     app.run(debug=True)

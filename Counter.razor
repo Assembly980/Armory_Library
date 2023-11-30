@@ -1,0 +1,43 @@
+﻿@page "/counter"
+@using Weapon_Armory.Data
+@inject WeatherForecastService ForecastService
+
+
+<PageTitle>Display Single Item</PageTitle>
+
+<h1>Display Single Item</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Rarity</th>
+            <th>Weapon Name</th>
+            <th>Extra Info</th>
+            <th>Picture</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@obj.WeaponRarity</td>
+            <td>@obj.WeaponName</td>
+            <td>@obj.Description</td>
+            <td><img src="@obj.Picture" alt="Weapon Image"/></td>
+        </tr>
+    </tbody>
+</table>
+
+<button class="btn-primary" @onclick="OnInitializedAsync">Click here for random Weapon</button>
+
+@code {
+    private int currentCount = 0;
+    private WeatherForecast obj = new WeatherForecast();
+
+    private async void OnInitializedAsync()
+    {
+        var client = new HttpClient();
+        HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:5000/api/swords/random");
+        string json = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+        obj = System.Text.Json.JsonSerializer.Deserialize<WeatherForecast>(json, options);
+    }
+}
