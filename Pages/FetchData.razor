@@ -2,9 +2,9 @@
 @using Weapon_Armory.Data
 @inject WeatherForecastService ForecastService
 
-<PageTitle>Weather forecast</PageTitle>
+<PageTitle>Display All Items</PageTitle>
 
-<h1>Weather forecast</h1>
+<h1>Display All Items</h1>
 
 <p>This component demonstrates fetching data from a service.</p>
 
@@ -17,20 +17,22 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
+                <th>Number</th>
+                <th>Rarity</th>
+                <th>Name</th>
+                <th>Extra Info</th>
+                <th>Picture</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @for (int forecast = 1; forecast <= forecasts.Count(); forecast++)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <td>@forecast</td>
+                    <td>@forecasts[forecast - 1].WeaponRarity</td>
+                    <td>@forecasts[forecast - 1].WeaponName</td>
+                    <td>@forecasts[forecast - 1].Description</td>
+                    <td><img src="@forecasts[forecast - 1].Picture" alt="Weapon Image" /></td> 
                 </tr>
             }
         </tbody>
@@ -38,10 +40,16 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private List<WeatherForecast>? forecasts;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateOnly.FromDateTime(DateTime.Now));
+        var client = new HttpClient();
+
+        forecasts = new List<WeatherForecast>();
+        HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:5000/api/swords");
+        string json = await response.Content.ReadAsStringAsync();
+        forecasts = Newtonsoft.Json.JsonConvert.DeserializeObject<List<WeatherForecast>>(json);
+        var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
     }
 }

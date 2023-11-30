@@ -1,11 +1,14 @@
-﻿@page "/counter"
+﻿@page "/specific"
 @using Weapon_Armory.Data
 @inject WeatherForecastService ForecastService
 
 
-<PageTitle>Display Single Random Item</PageTitle>
+<PageTitle>Display Single Item</PageTitle>
 
-<h1>Display Single Random Item</h1>
+<h1>Display Single Specific Item</h1>
+
+<input type="text" @oninput="UpdateText" />
+<button class="btn-primary" @onclick="OnInitializedAsync">Submit</button>
 
 <table class="table">
     <thead>
@@ -26,16 +29,20 @@
     </tbody>
 </table>
 
-<button class="btn-primary" @onclick="OnInitializedAsync">Click here for random Weapon</button>
-
 @code {
     private int currentCount = 0;
     private WeatherForecast obj = new WeatherForecast();
+    private string weaponName { get; set; } = String.Empty;
+
+    private void UpdateText(ChangeEventArgs input)
+    {
+        weaponName = input.Value.ToString();
+    }
 
     private async void OnInitializedAsync()
     {
         var client = new HttpClient();
-        HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:5000/api/swords/random");
+        HttpResponseMessage response = await client.GetAsync($"http://127.0.0.1:5000/api/swords/{weaponName}");
         string json = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
         obj = System.Text.Json.JsonSerializer.Deserialize<WeatherForecast>(json, options);
