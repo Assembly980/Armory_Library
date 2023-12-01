@@ -19,8 +19,9 @@ p[role="status"]{
 .outlineText {
     -webkit-text-stroke-width: 2px;
     -webkit-text-stroke-color: #3dcdff;
-    text-shadow: 5px 5px 5px #5d5dff;
+    text-shadow: 5px 5px 5px #2c35ff;
     font-size: 50px;
+    background: black;
 }
 
 h1:focus {
