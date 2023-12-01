@@ -2,12 +2,25 @@ namespace Weapon_Armory.Data
 {
     public class WeatherForecast
     {
-        public DateOnly Date { get; set; }
+        public string WeaponRarity { get; set; }
+        public string WeaponName { get; set; }
+        public string? Description { get; set; }
+        public string Picture { get; set; }
 
-        public int TemperatureC { get; set; }
+        public WeatherForecast()
+        {
+            WeaponRarity = "WIP";
+            WeaponName = "WIP";
+            Description = "WIP";
+            Picture = "WIP";
+        }
 
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-
-        public string? Summary { get; set; }
+        public WeatherForecast(string rarity, string weaponName, string? description, string picture)
+        {
+            WeaponRarity = rarity;
+            WeaponName = weaponName;
+            Description = description;
+            Picture = picture;
+        }
     }
 }

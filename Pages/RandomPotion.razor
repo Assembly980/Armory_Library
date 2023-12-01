@@ -1,0 +1,40 @@
+﻿@page "/randompotion"
+@using Weapon_Armory.Data
+
+
+<PageTitle>Display Single Random Potion</PageTitle>
+<div class="outlineText">
+    <p>Display Single Random Potion</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rarity</th>
+                <th>Name</th>
+                <th>Picture</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@obj.Rarity</td>
+                <td>@obj.PotionType</td>
+                <td><img src="@obj.Picture" alt="Potion Image"/></td>
+            </tr>
+        </tbody>
+    </table>
+ </div>
+ <button class="btn-primary" @onclick="OnInitializedAsync">Click here for random Potion</button>
+
+@code {
+    private int currentCount = 0;
+    private WeatherForecastService obj = new WeatherForecastService();
+
+    private async void OnInitializedAsync()
+    {
+        var client = new HttpClient();
+        HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:5000/api/potions/random");
+        string json = await response.Content.ReadAsStringAsync();
+        var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+        obj = System.Text.Json.JsonSerializer.Deserialize<WeatherForecastService>(json, options);
+    }
+}

@@ -1,10 +1,10 @@
-﻿@page "/specific"
+﻿@page "/specificpotion"
 @using Weapon_Armory.Data
 
 
-<PageTitle>Display Single Item</PageTitle>
+<PageTitle>Display Single Potion</PageTitle>
 <div class="outlineText">
-    <p>Display Single Specific Item</p>
+    <p>Display Single Specific Potion</p>
 </div>
     <input type="text" @oninput="UpdateText" />
     <button class="btn-primary" @onclick="OnInitializedAsync">Submit</button>
@@ -14,36 +14,34 @@
             <tr>
                 <th>Rarity</th>
                 <th>Name</th>
-                <th>Extra Info</th>
                 <th>Picture</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>@obj.WeaponRarity</td>
-                <td>@obj.WeaponName</td>
-                <td>@obj.Description</td>
-                <td><img src="@obj.Picture" alt="Weapon Image"/></td>
+                <td>@obj.Rarity</td>
+                <td>@obj.PotionType</td>
+                <td><img src="@obj.Picture" alt="Potion Image"/></td>
             </tr>
         </tbody>
     </table>
 </div>
 @code {
     private int currentCount = 0;
-    private WeatherForecast obj = new WeatherForecast();
-    private string weaponName { get; set; } = String.Empty;
+    private WeatherForecastService obj = new WeatherForecastService();
+    private string potionType { get; set; } = String.Empty;
 
     private void UpdateText(ChangeEventArgs input)
     {
-        weaponName = input.Value.ToString();
+        potionType = input.Value.ToString();
     }
 
     private async void OnInitializedAsync()
     {
         var client = new HttpClient();
-        HttpResponseMessage response = await client.GetAsync($"http://127.0.0.1:5000/api/swords/{weaponName}");
+        HttpResponseMessage response = await client.GetAsync($"http://127.0.0.1:5000/api/potions/{potionType}");
         string json = await response.Content.ReadAsStringAsync();
         var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
-        obj = System.Text.Json.JsonSerializer.Deserialize<WeatherForecast>(json, options);
+        obj = System.Text.Json.JsonSerializer.Deserialize<WeatherForecastService>(json, options);
     }
 }

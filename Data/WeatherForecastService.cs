@@ -2,19 +2,22 @@ namespace Weapon_Armory.Data
 {
     public class WeatherForecastService
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+        public string Rarity { get; set; }
+        public string PotionType { get; set; }
+        public string Picture { get; set; }
 
-        public Task<WeatherForecast[]> GetForecastAsync(DateOnly startDate)
+        public WeatherForecastService()
         {
-            return Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = startDate.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            }).ToArray());
+            Rarity = "WIP";
+            PotionType = "WIP";
+            Picture = "WIP";
+        }
+
+        public WeatherForecastService(string rarity, string potionType, string picture)
+        {
+            Rarity = rarity;
+            PotionType = potionType;
+            Picture = picture;
         }
     }
 }

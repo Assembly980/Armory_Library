@@ -1,32 +1,31 @@
 ﻿@page "/counter"
 @using Weapon_Armory.Data
-@inject WeatherForecastService ForecastService
 
 
-<PageTitle>Display Single Random Item</PageTitle>
+<PageTitle>Display Single Random Weapon</PageTitle>
+<div class="outlineText">
+    <p>Display Single Random Weapon</p>
 
-<h1>Display Single Random Item</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Rarity</th>
-            <th>Weapon Name</th>
-            <th>Extra Info</th>
-            <th>Picture</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>@obj.WeaponRarity</td>
-            <td>@obj.WeaponName</td>
-            <td>@obj.Description</td>
-            <td><img src="@obj.Picture" alt="Weapon Image"/></td>
-        </tr>
-    </tbody>
-</table>
-
-<button class="btn-primary" @onclick="OnInitializedAsync">Click here for random Weapon</button>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rarity</th>
+                <th>Name</th>
+                <th>Extra Info</th>
+                <th>Picture</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@obj.WeaponRarity</td>
+                <td>@obj.WeaponName</td>
+                <td>@obj.Description</td>
+                <td><img src="@obj.Picture" alt="Weapon Image"/></td>
+            </tr>
+        </tbody>
+    </table>
+ </div>
+ <button class="btn-primary" @onclick="OnInitializedAsync">Click here for random Weapon</button>
 
 @code {
     private int currentCount = 0;

@@ -48,6 +48,34 @@ def GetRandomSwordFromDB():
 
     return RandomSword
 
+def GetAllPotionsFromDB():
+
+    conn = DBConnection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT Rarity, PotionType, Picture FROM Potion')
+    potions = [{'Rarity': Rarity, 'PotionType': PotionType, 'Picture': Picture} for Rarity, PotionType, Picture in cursor.fetchall()]
+
+    return potions
+
+def GetPotionFromDB(PotionType):
+
+    conn = DBConnection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT Rarity, PotionType, Picture FROM Potion WHERE PotionType = ?', (PotionType,))
+    RequestedPotion = cursor.fetchone()
+
+    return RequestedPotion
+
+def GetRandomPotionFromDB():
+
+    RandInt = random.randint(1, 9)
+    conn = DBConnection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT Rarity, PotionType, Picture FROM Potion WHERE ID = ?', (RandInt,))
+    RandomPotion = cursor.fetchone()
+
+    return RandomPotion
+
 #returns all swords in database
 @app.route('/api/swords', methods=['GET'])
 def GetAllSwords():
@@ -69,6 +97,28 @@ def GetRequestedSword(WeaponName):
 def GetRandomSword():
     sword = GetRandomSwordFromDB()
     return jsonify({'WeaponRarity': sword[0], 'WeaponName': sword[1], 'Description':sword[2], 'Picture': sword[3]})
+
+#returns all potions
+@app.route('/api/potions', methods=['GET'])
+def GetAllPotions():
+    potions = GetAllPotionsFromDB()
+    return jsonify(potions)
+
+#returns requested potion
+@app.route('/api/potions/<PotionType>', methods=['GET'])
+def GetRequestedPotion(PotionType):
+    potion = GetPotionFromDB(PotionType)
+    
+    if potion:
+        return jsonify({'Rarity': potion[0], 'PotionType': potion[1], 'Picture': potion[2]})
+    else:
+        return jsonify(message='Potion not found! Its dangerous to go alone, take this Silver Cross!'), 404
+
+#returns random potion
+@app.route('/api/potions/random', methods=['GET'])
+def GetRandomPotion():
+    potion = GetRandomPotionFromDB()
+    return jsonify({'Rarity': potion[0], 'PotionType': potion[1], 'Picture': potion[2]})
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,11 +1,11 @@
-﻿@page "/fetchdata"
+﻿@page "/displaypotions"
 @using Weapon_Armory.Data
 
-<PageTitle>Display All Weapons</PageTitle>
+<PageTitle>Display All Potions</PageTitle>
 <div class="outlineText">
-    <p>Display All Weapons</p>
+    <p>Display All Potions</p>
 
-    @if (forecasts == null)
+    @if (potions == null)
     {
         <p><em>Loading...</em></p>
     }
@@ -17,19 +17,17 @@
                     <th>Number</th>
                     <th>Rarity</th>
                     <th>Name</th>
-                    <th>Extra Info</th>
                     <th>Picture</th>
                 </tr>
             </thead>
             <tbody>
-                @for (int forecast = 1; forecast <= forecasts.Count(); forecast++)
+                @for (int forecast = 1; forecast <= potions.Count(); forecast++)
                 {
                     <tr>
                         <td>@forecast</td>
-                        <td>@forecasts[forecast - 1].WeaponRarity</td>
-                        <td>@forecasts[forecast - 1].WeaponName</td>
-                        <td>@forecasts[forecast - 1].Description</td>
-                        <td><img src="@forecasts[forecast - 1].Picture" alt="Weapon Image" /></td> 
+                        <td>@potions[forecast - 1].Rarity</td>
+                        <td>@potions[forecast - 1].PotionType</td>
+                        <td><img src="@potions[forecast - 1].Picture" alt="Potion Image" /></td> 
                     </tr>
                 }
             </tbody>
@@ -37,16 +35,16 @@
     }
 </div>
 @code {
-    private List<WeatherForecast>? forecasts;
+    private List<WeatherForecastService>? potions;
 
     protected override async Task OnInitializedAsync()
     {
         var client = new HttpClient();
 
-        forecasts = new List<WeatherForecast>();
-        HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:5000/api/swords");
+        potions = new List<WeatherForecastService>();
+        HttpResponseMessage response = await client.GetAsync("http://127.0.0.1:5000/api/potions");
         string json = await response.Content.ReadAsStringAsync();
-        forecasts = Newtonsoft.Json.JsonConvert.DeserializeObject<List<WeatherForecast>>(json);
+        potions = Newtonsoft.Json.JsonConvert.DeserializeObject<List<WeatherForecastService>>(json);
         var options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
     }
 }
